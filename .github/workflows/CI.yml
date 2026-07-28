@@ -43,9 +43,7 @@ jobs:
         uses: julia-actions/julia-runtest@v1
 
       - name: Run examples
-        shell: julia --project=. --color=yes {0}
-        run: |
-          include("examples/run_all.jl")
+        run: julia --project=. --color=yes examples/run_all.jl
 
       - name: Process coverage
         if: matrix.os == 'ubuntu-latest' && matrix.version == '1'
