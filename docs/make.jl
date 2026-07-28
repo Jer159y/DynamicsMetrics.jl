@@ -44,7 +44,9 @@ makedocs(
 # Enable this after replacing the repository placeholder and configuring
 # documentation deployment in GitHub Actions.
 #
-# deploydocs(
-#     repo="github.com/YOUR_GITHUB_USERNAME/DynamicsMetrics.jl.git",
-#     devbranch="main",
-# )
+if get(ENV, "CI", "false") == "true"
+    deploydocs(
+        repo="github.com/Jer159y/DynamicsMetrics.jl.git",
+        devbranch="main",
+    )
+end

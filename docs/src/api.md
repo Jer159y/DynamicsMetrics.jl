@@ -3,88 +3,91 @@
 ## Core interface
 
 ```@docs
-AbstractMetric
-AbstractMetricResult
-evaluate
-metricname
-metricparameters
-supports_reduction
-validate_reduction
+DynamicsMetrics.AbstractMetric
+DynamicsMetrics.AbstractMetricResult
+DynamicsMetrics.evaluate
+DynamicsMetrics.metricname
+DynamicsMetrics.metricparameters
+DynamicsMetrics.supports_reduction
+DynamicsMetrics.validate_reduction
 ```
 
 ## Result types and accessors
 
 ```@docs
-MetricResult
-MetricSeries
-MetricReport
-value
-parameters
-metadata
+DynamicsMetrics.MetricResult
+DynamicsMetrics.MetricSeries
+DynamicsMetrics.MetricReport
 ```
 
 ## Metric suites
 
 ```@docs
-MetricSuite
+DynamicsMetrics.MetricSuite
 ```
 
 ## Pointwise metrics
 
 ```@docs
-RMSE
-MAE
-NRMSE
-RelativeL2Error
-ErrorOverTime
+DynamicsMetrics.RMSE
+DynamicsMetrics.MAE
+DynamicsMetrics.NRMSE
+DynamicsMetrics.RelativeL2Error
+DynamicsMetrics.ErrorOverTime
 ```
 
 ## Forecast horizons
 
 ```@docs
-ValidPredictionTime
-ForecastHorizon
+DynamicsMetrics.ValidPredictionTime
+DynamicsMetrics.ForecastHorizon
 ```
 
 ## Temporal diagnostics
 
 ```@docs
-Autocorrelation
-PowerSpectralDensity
-SpectralEntropy
+DynamicsMetrics.Autocorrelation
+DynamicsMetrics.PowerSpectralDensity
+DynamicsMetrics.SpectralEntropy
 ```
 
 ## Statistical metrics
 
 ```@docs
-CovarianceError
-WassersteinDistance
-JensenShannonDivergence
+DynamicsMetrics.CovarianceError
+DynamicsMetrics.WassersteinDistance
+DynamicsMetrics.JensenShannonDivergence
 ```
 
 ## Dynamical diagnostics
 
 ```@docs
-PermutationIrreversibility
-RecurrenceQuantification
+DynamicsMetrics.PermutationIrreversibility
+DynamicsMetrics.RecurrenceQuantification
 ```
 
 ## Ensemble metrics
 
 ```@docs
-EnsembleMean
-EnsembleSpread
-EnsembleMeanError
-MemberwiseError
-PredictionIntervalCoverage
+DynamicsMetrics.EnsembleMean
+DynamicsMetrics.EnsembleSpread
+DynamicsMetrics.EnsembleMeanError
+DynamicsMetrics.MemberwiseError
+DynamicsMetrics.PredictionIntervalCoverage
 ```
 
 ## Reporting
 
 ```@docs
-report_summary
-report_table
-serialize_report
-deserialize_report
-write_report_table
+DynamicsMetrics.report_summary
+DynamicsMetrics.report_table
+DynamicsMetrics.serialize_report
+DynamicsMetrics.deserialize_report
+DynamicsMetrics.write_report_table
+```
+
+## Reproducibility metadata
+
+```@docs
+DynamicsMetrics.reproduction_metadata
 ```
