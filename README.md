@@ -3,8 +3,8 @@
 A model-independent Julia package for evaluating predictions, simulations, and ensembles of dynamical systems.
 
 [![Build Status](https://github.com/Jer159y/DynamicsMetrics.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/Jer159y/DynamicsMetrics.jl/actions/workflows/CI.yml)
-[![Documentation](https://img.shields.io/badge/docs-dev-blue.svg)](https://Jer159y.github.io/DynamicsMetrics.jl/dev/)
-[![Coverage](https://codecov.io/gh/Jer159y/DynamicsMetrics.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/Jer159y/DynamicsMetrics.jl)
+[![Documentation](https://img.shields.io/badge/docs-dev-blue.svg)](https://Jer159y.github.io/DynamicsMetrics.jl)
+[![codecov](https://codecov.io/gh/Jer159y/DynamicsMetrics.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/Jer159y/DynamicsMetrics.jl)
 
 
 ## Overview
