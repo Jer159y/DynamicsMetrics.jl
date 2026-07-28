@@ -36,7 +36,7 @@ Until registration in Julia's General Registry, install from the repository:
 
 ```julia
 using Pkg
-Pkg.add(url="https://github.com/YOUR_GITHUB_USERNAME/DynamicsMetrics.jl")
+Pkg.add(url="https://github.com/Jer159y/DynamicsMetrics.jl")
 ```
 
 For local development:

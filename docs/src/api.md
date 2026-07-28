@@ -91,3 +91,8 @@ DynamicsMetrics.write_report_table
 ```@docs
 DynamicsMetrics.reproduction_metadata
 ```
+
+## Package module
+```@docs
+DynamicsMetrics
+```
