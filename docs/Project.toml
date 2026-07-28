@@ -1,0 +1,6 @@
+[deps]
+Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
+DynamicsMetrics = "c944e3a3-74f6-4bea-b0e8-f73556b21b03"
+
+[compat]
+Documenter = "1"
