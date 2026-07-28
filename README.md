@@ -847,3 +847,7 @@ The public API is being prepared for an initial registered release. Before
 version `1.0`, some constructor options, result fields, and metric definitions
 may evolve. Version constraints and release notes should be checked when
 reproducing long-lived research workflows.
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for release history.
