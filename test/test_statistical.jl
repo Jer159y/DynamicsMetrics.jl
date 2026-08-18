@@ -33,6 +33,39 @@
         @test evaluate(CovarianceError(), truth, shifted).value ≈ 0.0
     end
 
+    @testset "Quantile Wasserstein" begin
+        @test evaluate(
+            QuantileWassersteinDistance(reduction=:global), truth, truth
+        ).value ≈ 0.0
+
+        prediction = truth .+ 2.0
+        global_result = evaluate(
+            QuantileWassersteinDistance(reduction=:global), truth, prediction
+        )
+        state_result = evaluate(
+            QuantileWassersteinDistance(reduction=:state), truth, prediction
+        )
+        @test global_result.value ≈ 2.0
+        @test state_result.values ≈ [2.0, 2.0]
+
+        # Unlike WassersteinDistance, truth and prediction may have different
+        # time lengths -- only the state dimension must match. Replicating
+        # `prediction` changes its length without changing its empirical
+        # distribution, so the quantile-matched distance is unchanged.
+        longer_prediction = repeat(prediction, 1, 5)
+        mismatched_result = evaluate(
+            QuantileWassersteinDistance(reduction=:global, n_quantiles=8),
+            truth,
+            longer_prediction,
+        )
+        @test mismatched_result.value ≈ 2.0
+
+        wrong_states = vcat(truth, truth)
+        @test_throws DimensionMismatch evaluate(
+            QuantileWassersteinDistance(), truth, wrong_states,
+        )
+    end
+
     @testset "Jensen-Shannon bounds" begin
         prediction = truth .+ 10.0
         result = evaluate(

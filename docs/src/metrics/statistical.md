@@ -66,6 +66,31 @@ result = evaluate(
 Statewise marginal Wasserstein distances do not capture cross-state
 dependence.
 
+## Quantile Wasserstein distance
+
+```julia
+QuantileWassersteinDistance(; n_quantiles=200, reduction=:state)
+```
+
+`WassersteinDistance` requires truth and prediction to have equal sample
+counts. `QuantileWassersteinDistance` instead compares both samples'
+inverse-CDFs on a common probability grid of `n_quantiles` points, so it
+remains well-defined when truth and prediction have very different sample
+counts -- for example, a long reference trajectory compared against a short
+candidate segment.
+
+```julia
+result = evaluate(
+    QuantileWassersteinDistance(n_quantiles=200, reduction=:state),
+    truth,
+    prediction,
+)
+```
+
+For equal-length samples this converges toward `WassersteinDistance`'s value
+as `n_quantiles` grows, but the two are not numerically identical for finite
+`n_quantiles`.
+
 ## Jensen--Shannon divergence
 
 ```julia

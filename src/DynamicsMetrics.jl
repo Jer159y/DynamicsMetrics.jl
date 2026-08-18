@@ -54,10 +54,12 @@ export Autocorrelation,
 
 export CovarianceError,
        WassersteinDistance,
+       QuantileWassersteinDistance,
        JensenShannonDivergence
 
 export PermutationIrreversibility,
-       RecurrenceQuantification
+       RecurrenceQuantification,
+       GridVisitationDistance
 
 export EnsembleMean,
        EnsembleSpread,

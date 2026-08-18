@@ -56,6 +56,7 @@ DynamicsMetrics.SpectralEntropy
 ```@docs
 DynamicsMetrics.CovarianceError
 DynamicsMetrics.WassersteinDistance
+DynamicsMetrics.QuantileWassersteinDistance
 DynamicsMetrics.JensenShannonDivergence
 ```
 
@@ -64,6 +65,7 @@ DynamicsMetrics.JensenShannonDivergence
 ```@docs
 DynamicsMetrics.PermutationIrreversibility
 DynamicsMetrics.RecurrenceQuantification
+DynamicsMetrics.GridVisitationDistance
 ```
 
 ## Ensemble metrics

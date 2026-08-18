@@ -455,7 +455,8 @@ entropy = evaluate(
 | Metric | Purpose |
 |---|---|
 | `CovarianceError` | Difference between truth and prediction covariance structure |
-| `WassersteinDistance` | Distance between empirical state distributions |
+| `WassersteinDistance` | Distance between empirical state distributions (equal sample counts) |
+| `QuantileWassersteinDistance` | Distance between empirical state distributions of possibly different sample counts |
 | `JensenShannonDivergence` | Symmetric histogram-based distribution divergence |
 
 Example:
@@ -472,6 +473,13 @@ covariance_error = evaluate(
 
 wasserstein = evaluate(
     WassersteinDistance(reduction=:state),
+    truth,
+    prediction,
+)
+
+# truth and prediction may have different time lengths here
+quantile_wasserstein = evaluate(
+    QuantileWassersteinDistance(n_quantiles=200, reduction=:state),
     truth,
     prediction,
 )
@@ -497,6 +505,7 @@ after pointwise trajectories have diverged.
 |---|---|
 | `PermutationIrreversibility` | Temporal asymmetry based on ordinal patterns |
 | `RecurrenceQuantification` | Recurrence rate, determinism, and diagonal-line statistics |
+| `GridVisitationDistance` | Total-variation distance between truth/prediction state-space occupation measures |
 
 Example:
 
@@ -524,10 +533,23 @@ println(rqa[:recurrence_rate].value)
 println(rqa[:determinism].value)
 println(rqa[:average_diagonal_length].value)
 println(rqa[:longest_diagonal_length].value)
+
+grid_visitation = evaluate(
+    GridVisitationDistance(
+        bins_per_dim=40,
+        dims=1:2,
+        pad_frac=0.05,
+    ),
+    truth,
+    prediction,
+)
 ```
 
-These diagnostics characterize the temporal organization of one trajectory.
-They should not be interpreted as substitutes for pointwise prediction error.
+`PermutationIrreversibility` and `RecurrenceQuantification` characterize the
+temporal organization of one trajectory and should not be interpreted as
+substitutes for pointwise prediction error. `GridVisitationDistance` instead
+compares two trajectories' explored state-space geometry directly, and is
+best suited to low-dimensional (2-3 state) systems.
 
 ### Ensemble metrics
 

@@ -8,6 +8,15 @@ follows semantic versioning.
 
 ## [Unreleased]
 
+### Added
+
+- `QuantileWassersteinDistance`: quantile-matched empirical Wasserstein
+  distance, permitting truth/prediction of different sample counts (unlike
+  `WassersteinDistance`).
+- `GridVisitationDistance`: total-variation distance between truth/prediction
+  occupation measures on a fixed state-space grid, for low-dimensional
+  (2-3 state) systems.
+
 ## [0.1.0] - 2026-07-29
 
 ### Added

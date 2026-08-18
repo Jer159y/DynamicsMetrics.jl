@@ -98,6 +98,45 @@ at least `min_diagonal`.
 Average and longest diagonal-line lengths summarize repeated evolution over
 similar state-space paths.
 
+## Grid visitation distance
+
+```julia
+GridVisitationDistance(; bins_per_dim=40, dims=1:2, pad_frac=0.05)
+```
+
+Unlike permutation irreversibility and recurrence quantification, which
+diagnose one trajectory, grid visitation distance compares truth and
+prediction directly: how much of the explored state space each one visits,
+and how often.
+
+A fixed grid is built once from `truth`'s observed range along `dims` (padded
+by `pad_frac`) and reused for both trajectories, so a prediction that leaves
+the truth's explored region is penalized rather than silently rebinned onto
+its own range. Time samples falling outside every grid cell are counted in
+one additional "outside" bucket, so a trajectory that diverges completely off
+the attractor still receives a well-defined, maximal distance instead of
+being dropped.
+
+```julia
+result = evaluate(
+    GridVisitationDistance(
+        bins_per_dim=40,
+        dims=1:2,
+        pad_frac=0.05,
+    ),
+    truth,
+    prediction,
+)
+```
+
+The distance is bounded in `[0, 1]`: `0` means truth and prediction visited
+the sampled state-space region with identical relative frequency; `1` means no
+overlap at all.
+
+Grid cell count grows as `bins_per_dim^length(dims)`, so this metric is
+intended for low-dimensional state spaces (2-3 dimensions); high-dimensional
+systems will produce a sparse, uninformative grid.
+
 ## Parameter sensitivity
 
 RQA values depend strongly on:

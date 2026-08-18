@@ -177,6 +177,142 @@ function evaluate(
 end
 
 """
+    QuantileWassersteinDistance(; n_quantiles=200, reduction=:state)
+
+Quantile-matched empirical first Wasserstein distance between truth and
+prediction samples of possibly different length.
+
+Unlike `WassersteinDistance`, which requires equal sample counts and compares
+sorted values directly, `QuantileWassersteinDistance` compares both samples'
+inverse-CDFs on a common probability grid of `n_quantiles` points. This stays
+well-defined when truth and prediction have very different sample counts —
+for example, a long reference trajectory compared against a short candidate
+segment.
+
+For equal-length samples this converges toward `WassersteinDistance`'s value
+as `n_quantiles` grows, but the two are not numerically identical for finite
+`n_quantiles`.
+
+Supported reductions:
+
+- `:state`: compute one distance per state variable.
+- `:global`: flatten all states and compute one distance.
+
+Unlike most metrics in this package, `truth` and `prediction` may have
+different time lengths; only their state dimension must match.
+"""
+struct QuantileWassersteinDistance <: AbstractMetric
+    n_quantiles::Int
+    reduction::Symbol
+
+    function QuantileWassersteinDistance(
+        ;
+        n_quantiles::Integer=200,
+        reduction::Symbol=:state,
+    )
+        n_quantiles >= 1 || throw(ArgumentError(
+            "`n_quantiles` must be positive; received $n_quantiles."
+        ))
+        reduction in (:state, :global) || throw(ArgumentError(
+            "QuantileWassersteinDistance supports only `reduction=:state` or " *
+            "`reduction=:global`; received `$reduction`."
+        ))
+        return new(Int(n_quantiles), reduction)
+    end
+end
+
+metricname(::QuantileWassersteinDistance) = :quantile_wasserstein_distance
+supports_reduction(::QuantileWassersteinDistance, reduction::Symbol) =
+    reduction in (:state, :global)
+
+function evaluate(
+    metric::QuantileWassersteinDistance,
+    truth,
+    prediction;
+    nonfinite::Symbol=:error,
+)
+    checked_truth = _validate_quantile_input(truth, :truth; nonfinite=nonfinite)
+    checked_prediction = _validate_quantile_input(prediction, :prediction; nonfinite=nonfinite)
+
+    _state_dimension(checked_truth) == _state_dimension(checked_prediction) ||
+        throw(DimensionMismatch(
+            "Truth and prediction must have the same number of state " *
+            "variables. Received truth state dimension " *
+            "$(_state_dimension(checked_truth)) and prediction state " *
+            "dimension $(_state_dimension(checked_prediction))."
+        ))
+
+    result = if metric.reduction === :global
+        _quantile_wasserstein_1d(vec(checked_truth), vec(checked_prediction), metric.n_quantiles)
+    elseif checked_truth isa AbstractVector
+        _quantile_wasserstein_1d(checked_truth, checked_prediction, metric.n_quantiles)
+    else
+        distances = Vector{Float64}(undef, size(checked_truth, 1))
+        for state in axes(checked_truth, 1)
+            distances[state] = _quantile_wasserstein_1d(
+                @view(checked_truth[state, :]),
+                @view(checked_prediction[state, :]),
+                metric.n_quantiles,
+            )
+        end
+        distances
+    end
+
+    result_metadata = (
+        truth_time_length=_time_length(checked_truth),
+        prediction_time_length=_time_length(checked_prediction),
+        state_dimension=_state_dimension(checked_truth),
+        n_quantiles=metric.n_quantiles,
+        nonfinite=nonfinite,
+    )
+
+    if result isa Number
+        return MetricResult(
+            metricname(metric),
+            result,
+            metricparameters(metric),
+            result_metadata,
+        )
+    end
+
+    return MetricSeries(
+        metricname(metric),
+        result,
+        collect(1:length(result)),
+        metricparameters(metric),
+        result_metadata,
+    )
+end
+
+function _quantile_wasserstein_1d(
+    x::AbstractVector,
+    y::AbstractVector,
+    n_quantiles::Integer,
+)
+    probs = range(1 / (n_quantiles + 1), n_quantiles / (n_quantiles + 1); length=n_quantiles)
+    qx = quantile(vec(x), probs)
+    qy = quantile(vec(y), probs)
+    return mean(abs.(qx .- qy))
+end
+
+function _validate_quantile_input(data, name::Symbol; nonfinite::Symbol)
+    _validate_nonfinite_policy(nonfinite)
+    array = _validate_timeseries_input(data, name)
+
+    _time_length(array) > 0 || throw(ArgumentError(
+        "`$name` must contain at least one time sample."
+    ))
+
+    require_real(array, name)
+
+    if nonfinite === :error
+        _require_finite(array, name)
+    end
+
+    return array
+end
+
+"""
     JensenShannonDivergence(; bins=50, reduction=:state,
                             base=2, range=:combined)
 
